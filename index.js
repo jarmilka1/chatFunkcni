@@ -68,7 +68,6 @@ app.get('/settedSession', (req, res) => {
     res.send('No username found in the session');
   }
 });
-  
 
 app.get('/chat', (req, res) => {
   let username = req.session.username;
@@ -113,8 +112,6 @@ app.get('/login', (req, res) => {
   res.render('login.ejs');
 });
 
-var currentUsername;
-
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
@@ -139,6 +136,37 @@ app.post('/login', (req, res) => {
   });
 });
 
+app.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error(err);
+    }
+    res.redirect('/login');
+  });
+});
+
+//svg
+app.get('/svg', (req, res) => {
+  const queryPromise = new Promise((resolve, reject) => {
+    connection.query('SELECT * FROM svg_data', (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+
+  queryPromise.then((results) => {
+    const svgDataArray = results.map(result => result.svg_data);
+    res.render('svg.ejs', { svgDataArray: svgDataArray });
+  }).catch((error) => {
+    throw error;
+  });
+});
+
+
+
 io.use(sharedSession(sessionMiddleware, {
   autoSave: true,
 }));
@@ -152,6 +180,7 @@ io.on('connection', (socket) => {
     if (session.username) {
       io.emit('chat message', session.username + " : " + msg);
     }
+    console.log('chat message', session.username + " : " + msg)
   });
 
   // Naslouchání na události odpojení klienta od Socket.io
@@ -161,7 +190,8 @@ io.on('connection', (socket) => {
   });
 });
 
+
 // Spuštění HTTP serveru na portu 80
-server.listen(8880, () => {
-  console.log('server running at port 8880');
+server.listen(80, () => {
+  console.log('server running at port 80');
 });

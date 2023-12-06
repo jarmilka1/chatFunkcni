@@ -6,13 +6,12 @@
   <title>Špačet</title>
   <script src="/socket.io/socket.io.js"></script>
   <script src="client.js"></script>
+  <link rel="icon" href="https://cdn.discordapp.com/attachments/978941138771795978/1174610277661159424/spachat1k1.png">
   <style>
-    a{
-      float: right;
-    }
-    button{
+    .button {
       padding: 10px 10px 8px 10px;
     }
+
     body {
       margin: 0;
       padding-bottom: 3rem;
@@ -20,7 +19,7 @@
     }
 
     #form {
-      background: rgba(0, 0, 0, 0.15);
+      background-color: rgb(206, 206, 206);
       padding: 0.25rem;
       position: fixed;
       bottom: 0;
@@ -30,6 +29,7 @@
       height: 3rem;
       box-sizing: border-box;
       backdrop-filter: blur(10px);
+      border: 1px solid black;
     }
 
     #input {
@@ -44,7 +44,7 @@
       outline: none;
     }
 
-    #form>button {
+    #form>.button {
       background: #333;
       border: none;
       padding: 0 1rem;
@@ -67,23 +67,52 @@
     #messages>li:nth-child(odd) {
       background: #efefef;
     }
-    label{margin-top: 7px;}
+
+    label {
+      margin-top: 7px;
+    }
+
+    #logout {
+      border: none;
+      border-radius: 5px;
+    }
+
+    p {
+      margin: auto;
+    }
   </style>
 </head>
+
 <body>
-  <a href="/login"><button>login</button></a>
   <ul id="messages"></ul>
   <form id="form" action="">
-    <!-- <label>jmeno</label><input id="jmeno"/> -->
-    <input id="input" autocomplete="off" placeholder="Type your message..." /> <button>Send</button>
+    <p id="username"><%=username %></p>
+    <input id="input" autocomplete="off" placeholder="Type your message..." maxlength="150" />
+    <p id="charCount">0/150</p>
+    <button class="button" onclick="sendMessage()">Send</button>
+    <input class="button" type="button" value="Log Out" onclick="window.location.href='/logout' "style="background-color: red;" />
   </form>
-  
+
   <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const inputElement = document.getElementById('input');
+      const charCountElement = document.getElementById('charCount');
+
+      inputElement.addEventListener('input', function () {
+        const currentLength = inputElement.value.length;
+        const maxLength = parseInt(inputElement.getAttribute('maxlength'));
+        charCountElement.textContent = currentLength + '/' + maxLength;
+
+        // You can add additional logic to disable the form submission if the limit is exceeded
+        // For example, you can check if currentLength > maxLength and prevent the form submission.
+      });
+    });
+
     const socket = io();
 
     const messages = document.getElementById('messages');
     const form = document.getElementById('form');
-    const input =document.getElementById('input');
+    const input = document.getElementById('input');
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
