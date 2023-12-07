@@ -159,10 +159,12 @@ app.get('/svg', (req, res) => {
 
   queryPromise.then((results) => {
     const svgDataArray = results.map(result => result.svg_data);
-    res.render('svg.ejs', { svgDataArray: svgDataArray });
+    const svgSTYLEArray = results.map(result => result.style);
+    res.render('svg.ejs', { svgDataArray: svgDataArray }, {svgSTYLEArray:svgSTYLEArray});
   }).catch((error) => {
     throw error;
   });
+
 });
 
 
