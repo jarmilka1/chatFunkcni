@@ -3,70 +3,147 @@
 
 <head>
   <title>Chat</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="with=device-width, initial-scaled=1.0">
   <link rel="icon" type="image/x-icon"
     href="https://media.discordapp.net/attachments/978941138771795978/1159150359214821447/20231004_171140.jpg?ex=652ff9e5&is=651d84e5&hm=a2f6e3bc6f79da53c0a9018bc8fdfc6d1120d510eb6018c003ae8fce9583e434&=&width=362&height=483">
   <style>
-
     #div1 {
       border: 15px solid rgb(17, 16, 16);
-      /* 5px rámeček kolem div */
       background-color: black;
-      top: 100px;
-      left: 500px;
-      right: 500px;
+      top: 1000px;
+      left: 50%;
+      right: 50%;
       bottom: 100px;
       margin: 50px;
+      margin-left: 24%;
+      margin-right: 24%;
       padding: 5px;
-      position: absolute;
-      align-items: center;/* Zarovnání podle vertikální osy */
+      position: static;
+      align-items: center;
+      height: 50%;
+      box-sizing: inherit;
+      display: block;
+      -webkit-text-size-adjust: 100%;
+      size-adjust: auto;
+    }
+
+    #div2{
+      left: 50%;
+      right: 50%;
+      position: static;
+      box-sizing: inherit;
+      -webkit-text-size-adjust: 100%;
+      size-adjust: auto;
     }
 
     #b1 {
+      display: block;
       color: white;
       text-align: center;
       font-weight: bold;
       font-family: Arial;
-      font-size: 20px;
-      border: 5px solid rgb(17, 16, 16);/* Rámeček kolem tlačítka */ 
+      font-size: 15px;
+      border: 5px solid rgb(17, 16, 16);
       background-color: black;
       margin: 5px;
       margin-top: 0px;
-      margin-left: 180px;
-      padding: 20px;
-      width: 140px;
-      position: absolute;
+      margin-left: auto;
+      margin-right: auto;
+      width: 25%;
+      padding: 30px;
+      position: static;
+      box-sizing: inherit;
+      -webkit-text-size-adjust: 100%;
+      size-adjust: auto;
+    }
+
+    #b2 {
+      display: block;
+      color: white;
+      text-align: center;
+      font-weight: bold;
+      font-family: Arial;
+      font-size: 15px;
+      border: 5px solid rgb(17, 16, 16);
+      background-color: black;
+      margin: 5px;
+      margin-top: 0px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 25%;
+      padding: 30px;
+      position: static;
+      box-sizing: inherit;
+      -webkit-text-size-adjust: 100%;
+      size-adjust: auto;
     }
 
     #h1 {
+      left: 50%;
+      right: 50%;
+      display: block;
       font-family: Arial;
       color: white;
       text-align: center;
+      position: static;
+      box-sizing: inherit;
+      -webkit-text-size-adjust: 100%;
+      size-adjust: auto;
     }
 
     #img1 {
-      margin-left: 100px;
-      left: 500px;
-      height: 200px;
-      width: 300px;
+      border: 15px solid rgb(17, 16, 16);
+      display: block;
+      margin-right: auto;
+      margin-left: auto;
+      width: 50%;
+      height: 50%;
+      width: 50%;
+      position: static;
+      box-sizing: inherit;
+      -webkit-text-size-adjust: 100%;
+      size-adjust: auto;
     }
 
     #p1 {
+      left: 50%;
+      right: 50%;
       font-family: Arial;
       color: white;
       text-align: center;
+      position: static;
+      box-sizing: inherit;
+      display: block;
+      -webkit-text-size-adjust: 100%;
+      size-adjust: auto;
+    }
+
+    button{
+      border: none;
+      color: white;
+      text-align: center;
+      font-weight: bold;
+      font-family: Arial;
+      font-size: 15px;
+      background-color: black;
+      position: static;
+      box-sizing: inherit;
+      size-adjust: auto;
     }
   </style>
 
 </head>
 
 <body style="background-color: rgb(202, 20, 20);
-            margin: 0; 
+            margin: 0;
             padding: 0;">
   <div id="div1">
     <h1 id="h1">Přístup odepřen 😡</h1>
-    <img src="https://cdn.discordapp.com/attachments/928195421770235924/1165929781141966978/nn.jpg?ex=6548a3b9&is=65362eb9&hm=47257d07c9ae04166a7dc413395340ede2c80b37c968dcd415fc3f7e5b5925fc&" , alt="nn" , id="img1">
-    <p id="p1">Přihlaste se nebo se zaregistrujte</p>
-    <a href="/login"><button id="b1">- Login -</button></a>
+    <div id="div2"><img src="https://cdn.discordapp.com/attachments/928195421770235924/1165929781141966978/nn.jpg?ex=6548a3b9&is=65362eb9&hm=47257d07c9ae04166a7dc413395340ede2c80b37c968dcd415fc3f7e5b5925fc&" alt="nn" id="img1"></div>
+    <p id="p1">Zadali jste špatné jméno nebo heslo, zkuste to <br> znovu nebo se zaregistrujte</p>
+    <a href="/login" id="b1"><button>- Login -</button></a>
+    <a href="/register" id="b2"><button>- Register -</button></a>
   </div>
 
 </body>

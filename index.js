@@ -148,7 +148,7 @@ app.get('/logout', (req, res) => {
 //svg
 app.get('/svg', (req, res) => {
   const queryPromise = new Promise((resolve, reject) => {
-    connection.query('SELECT * FROM svg_data', (error, results) => {
+    connection.query('SELECT svg_data, style FROM svg_data', (error, results) => {
       if (error) {
         reject(error);
       } else {
@@ -160,12 +160,13 @@ app.get('/svg', (req, res) => {
   queryPromise.then((results) => {
     const svgDataArray = results.map(result => result.svg_data);
     const svgSTYLEArray = results.map(result => result.style);
-    res.render('svg.ejs', { svgDataArray: svgDataArray }, {svgSTYLEArray:svgSTYLEArray});
+
+    res.render('svg.ejs', { svgDataArray, svgSTYLEArray });
   }).catch((error) => {
     throw error;
   });
-
 });
+
 
 
 
