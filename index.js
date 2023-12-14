@@ -8,15 +8,19 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const sharedSession = require('express-socket.io-session');
+const multer = require('multer'); // Import multer
+const upload = multer({ dest: 'uploads/' });
+
 
 // Inicializace Express aplikace
 const app = express();
 app.use(cookieParser());
-
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
+app.use('/uploads', express.static('uploads'));
+
 
 // Vytvoření HTTP serveru pomocí Express aplikace
 const server = createServer(app);
@@ -72,12 +76,12 @@ app.get('/settedSession', (req, res) => {
 app.get('/chat', (req, res) => {
   let username = req.session.username;
 
-  if (!username) {
+  if (!username && req.session.authenticated) {
     // If it's not in the cookies, you can also check the session
     username = req.session.username;
   }
 
-  if (username) {
+  if (username && req.session.authenticated) {
     res.render('index', { username });
   } else {
     res.sendFile(join(__dirname, 'failedLogin.html'));
@@ -167,12 +171,18 @@ app.get('/svg', (req, res) => {
   });
 });
 
-
-
+//foto
+app.post('/upload-image', upload.single('image'), (req, res) => {
+  // Handle the uploaded image
+  const imagePath = req.file.path;
+  // Perform any necessary processing or save the image path to a database
+  res.json({ success: true, imagePath });
+});
 
 io.use(sharedSession(sessionMiddleware, {
   autoSave: true,
 }));
+
 
 // Naslouchání na události připojení klienta k Socket.io
 io.on('connection', (socket) => {

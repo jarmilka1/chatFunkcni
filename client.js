@@ -5,6 +5,7 @@ const socket = io();
 const messages = document.getElementById('messages'); // Element pro zobrazování zpráv
 const form = document.getElementById('form'); // Formulář pro odesílání zpráv
 const input = document.getElementById('input'); // Pole pro zadání textu zprávy
+const imageInput = document.getElementById('sendImage');
 
 // Naslouchání na odeslání formuláře (odeslání zprávy)
 form.addEventListener('submit', (e) => {

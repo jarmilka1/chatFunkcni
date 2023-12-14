@@ -8,27 +8,28 @@
   <link rel="icon" type="image/x-icon"
     href="https://media.discordapp.net/attachments/978941138771795978/1159150359214821447/20231004_171140.jpg?ex=652ff9e5&is=651d84e5&hm=a2f6e3bc6f79da53c0a9018bc8fdfc6d1120d510eb6018c003ae8fce9583e434&=&width=362&height=483">
   <style>
+    body {
+      background-color: darkslategrey;
+    }
     #div1 {
-      border: 15px solid rgb(17, 16, 16);
-      background-color: black;
       top: 1000px;
-      left: 50%;
-      right: 50%;
-      bottom: 100px;
+      bottom: 10px;
       margin: 50px;
       margin-left: 24%;
       margin-right: 24%;
       padding: 5px;
-      position: static;
       align-items: center;
       height: 50%;
       box-sizing: inherit;
       display: block;
       -webkit-text-size-adjust: 100%;
       size-adjust: auto;
+      animation: example 2s forwards;
+      position: relative;
+      display: grid;
     }
 
-    #div2{
+    #div2 {
       left: 50%;
       right: 50%;
       position: static;
@@ -39,12 +40,11 @@
 
     #b1 {
       display: block;
-      color: white;
       text-align: center;
       font-weight: bold;
       font-family: Arial;
       font-size: 15px;
-      border: 5px solid rgb(17, 16, 16);
+      
       background-color: black;
       margin: 5px;
       margin-top: 0px;
@@ -55,7 +55,7 @@
       position: static;
       box-sizing: inherit;
       -webkit-text-size-adjust: 100%;
-      size-adjust: auto;
+      
     }
 
     #b2 {
@@ -65,7 +65,7 @@
       font-weight: bold;
       font-family: Arial;
       font-size: 15px;
-      border: 5px solid rgb(17, 16, 16);
+      
       background-color: black;
       margin: 5px;
       margin-top: 0px;
@@ -90,10 +90,12 @@
       box-sizing: inherit;
       -webkit-text-size-adjust: 100%;
       size-adjust: auto;
+      
+      text-shadow: 0px 0px 10px rgb(0, 0, 0);
     }
 
     #img1 {
-      border: 15px solid rgb(17, 16, 16);
+      border: 8px solid rgb(17, 16, 16);
       display: block;
       margin-right: auto;
       margin-left: auto;
@@ -109,6 +111,7 @@
     #p1 {
       left: 50%;
       right: 50%;
+      font-size: 24px;
       font-family: Arial;
       color: white;
       text-align: center;
@@ -117,9 +120,12 @@
       display: block;
       -webkit-text-size-adjust: 100%;
       size-adjust: auto;
+      
+      text-shadow: 0px 0px 10px rgb(0, 0, 0);
+    
     }
 
-    button{
+    button {
       border: none;
       color: white;
       text-align: center;
@@ -131,16 +137,28 @@
       box-sizing: inherit;
       size-adjust: auto;
     }
+
+    @keyframes example {
+
+      100% {
+
+        bottom: 150px;
+        top: 10px;
+
+      }
+    }
   </style>
 
 </head>
 
-<body style="background-color: rgb(202, 20, 20);
+<body style="
             margin: 0;
             padding: 0;">
   <div id="div1">
     <h1 id="h1">Přístup odepřen 😡</h1>
-    <div id="div2"><img src="https://cdn.discordapp.com/attachments/928195421770235924/1165929781141966978/nn.jpg?ex=6548a3b9&is=65362eb9&hm=47257d07c9ae04166a7dc413395340ede2c80b37c968dcd415fc3f7e5b5925fc&" alt="nn" id="img1"></div>
+    <div id="div2"><img
+        src="https://cdn.discordapp.com/attachments/978941138771795978/1181567955088183296/129a320e-081a-4cab-842c-f341925fcdf7.png?ex=658187e8&is=656f12e8&hm=62d2eb412dfdcfe876933934c8bffc7808c4da0b7ef27b40aaf085fdd3ebcf1d&"
+        alt="nn" id="img1"></div>
     <p id="p1">Zadali jste špatné jméno nebo heslo, zkuste to <br> znovu nebo se zaregistrujte</p>
     <a href="/login" id="b1"><button>- Login -</button></a>
     <a href="/register" id="b2"><button>- Register -</button></a>
