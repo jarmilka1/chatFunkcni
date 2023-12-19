@@ -118,7 +118,7 @@
       background: #e74c3c;
     }
 
-    #logoutnorm {
+    #logoutnorm{
       background-color: red;
       border: none;
       padding: 0 1rem;
@@ -127,6 +127,7 @@
       outline: none;
       color: #fff;
     }
+
   </style>
 </head>
 
@@ -135,17 +136,11 @@
 
   <!-- Updated Form Section -->
   <form id="form" action="">
-    <p id="username">
-      <%=username %>
-    </p>
-    <input id="input" autocomplete="off" placeholder="Type your message..." maxlength="200" />
-    <p id="charCount">0/200</p>
-    <input type="file" id="imageInput" accept="image/*" style="display:none;" />
-    <button id="send" class="button" onclick="sendTextMessage()">Send Message</button>
-    <button id="foto" onclick="document.getElementById('imageInput').click();">Choose Image</button>
-    <button id="sendImage" class="button" onclick="sendImageMessage()">Send Image</button>
-    <button id="logoutnorm" class="button popup-btn" onclick="togglePopup()" style="background: purple;">Log
-      Out</button>
+    <p id="username"><%=username %></p>
+    <input id="input" autocomplete="off" placeholder="Type your message..." maxlength="150" />
+    <p id="charCount">0/150</p>
+    <button id="send" class="button" onclick="sendMessage()">Send</button>
+    <button id="logoutnorm" class="button popup-btn" onclick="togglePopup()" style="background: purple;">Log Out</button>
   </form>
 
   <!-- Pop-up Section -->
@@ -158,7 +153,6 @@
   </div>
 
   <script>
-    //max znaky
     document.addEventListener('DOMContentLoaded', function () {
       const inputElement = document.getElementById('input');
       const charCountElement = document.getElementById('charCount');
@@ -167,94 +161,28 @@
         const currentLength = inputElement.value.length;
         const maxLength = parseInt(inputElement.getAttribute('maxlength'));
         charCountElement.textContent = currentLength + '/' + maxLength;
+
+        // You can add additional logic to disable the form submission if the limit is exceeded
       });
     });
 
-    //foto
-    document.addEventListener('DOMContentLoaded', function () {
-      // File input change event
-      const imageInput = document.getElementById('imageInput');
-      imageInput.addEventListener('change', handleImageUpload);
-
-      // Function to handle image upload
-      function handleImageUpload() {
-        const file = imageInput.files[0];
-        if (file) {
-          const formData = new FormData();
-          formData.append('image', file);
-
-          // Example using fetch API
-          fetch('/upload-image', {
-            method: 'POST',
-            body: formData,
-          })
-            .then(response => response.json())
-            .then(data => {
-              // Handle the response from the server if needed
-              console.log('Image uploaded:', data);
-            })
-            .catch(error => {
-              console.error('Error uploading image:', error);
-            });
-        }
-      }
-    });
-
-    //zpravy
     const socket = io();
 
     const messages = document.getElementById('messages');
     const form = document.getElementById('form');
     const input = document.getElementById('input');
-    const imageInput = document.getElementById('imageInput');
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       if (input.value) {
-        sendTextMessage();
+        socket.emit('chat message', input.value);
         input.value = '';
       }
     });
 
-    function sendTextMessage() {
-      if (input.value) {
-        socket.emit('chat message', input.value);
-        input.value = '';
-      }
-    }
-
-    function sendImageMessage() {
-      const file = imageInput.files[0];
-      if (file) {
-        const formData = new FormData();
-        formData.append('image', file);
-
-        fetch('/upload-image', {
-          method: 'POST',
-          body: formData,
-        })
-          .then(response => response.json())
-          .then(data => {
-            socket.emit('chat message', data.imagePath);
-          })
-          .catch(error => {
-            console.error('Error uploading image:', error);
-          });
-      }
-    }
-
     socket.on('chat message', (msg) => {
       const item = document.createElement('li');
-      if (msg.startsWith('uploads\\')) {
-        // Replace backslashes with forward slashes
-        const imagePath = msg.replace(/\\/g, '/');
-
-        const img = document.createElement('img');
-        img.src = imagePath; // Set the image path
-        item.appendChild(img);
-      } else {
-        item.textContent = msg;
-      }
+      item.textContent = msg;
       messages.appendChild(item);
       window.scrollTo(0, document.body.scrollHeight);
     });
@@ -263,8 +191,8 @@
       console.log(socket.id);
     });
 
-    // Pop-up functions
-    function togglePopup() {
+        // Pop-up functions
+        function togglePopup() {
       document.getElementById('overlay').style.display = 'block';
       document.getElementById('popup').style.display = 'block';
     }
