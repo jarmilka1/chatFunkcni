@@ -1,0 +1,81 @@
+# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,node,database
+# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,node,database
+
+### Database ###
+*.accdb
+*.db
+*.dbf
+*.mdb
+*.pdb
+*.sqlite3
+*.db-shm
+*.db-wal
+
+### Node ###
+# Logs
+logs
+*.log
+npm-debug.log*
+
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+
+
+# DynamoDB Local files
+.dynamodb/
+
+
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+
+
+### Node Patch ###
+# Serverless Webpack directories
+.webpack/
+
+
+
+
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
