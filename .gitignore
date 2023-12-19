@@ -1,81 +1,38 @@
-# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,node,database
-# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,node,database
+# Node.js
+node_modules/
 
-### Database ###
-*.accdb
-*.db
-*.dbf
-*.mdb
-*.pdb
-*.sqlite3
-*.db-shm
-*.db-wal
+# Visual Studio Code
+.vscode/
 
-### Node ###
+# OS-generated files
+.DS_Store
+Thumbs.db
+
 # Logs
-logs
+logs/
 *.log
-npm-debug.log*
 
+# Environment variables
+.env
 
-# Diagnostic reports (https://nodejs.org/api/report.html)
-report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+# Dependency lock files
+yarn.lock
+package-lock.json
 
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
+# Build output
+dist/
+out/
 
+# IDE-specific files
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
 
-# TypeScript cache
-*.tsbuildinfo
-
-# Optional npm cache directory
-.npm
-
-
-# Optional REPL history
-.node_repl_history
-
-# Output of 'npm pack'
-*.tgz
-
-
-
-# DynamoDB Local files
-.dynamodb/
-
-
-
-# Stores VSCode versions used for testing VSCode extensions
-.vscode-test
-
-
-
-### Node Patch ###
-# Serverless Webpack directories
-.webpack/
-
-
-
-
-
-### VisualStudioCode ###
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/*.code-snippets
-
-# Local History for Visual Studio Code
-.history/
-
-# Built Visual Studio Code Extensions
-*.vsix
-
-### VisualStudioCode Patch ###
-# Ignore all local history of files
-.history
-.ionide
+# User-specific files
+*.sublime-workspace
+*.sublime-project
+*.komodoproject
+.komodotools/
