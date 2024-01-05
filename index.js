@@ -174,6 +174,8 @@ io.use(sharedSession(sessionMiddleware, {
 // Naslouchání na události připojení klienta k Socket.io
 io.on('connection', (socket) => {
   const session = socket.handshake.session;
+  console.log('user ' + session.username + ' connected');
+  io.emit('user joined', session.username);
 
   // Naslouchání na událost 'chat message' pro přijetí zprávy od klienta
   socket.on('chat message', (msg) => {
@@ -183,8 +185,7 @@ io.on('connection', (socket) => {
     console.log('chat message', session.username + " : " + msg)
   });
 
-  // Naslouchání na události odpojení klienta od Socket.io
-  socket.on('disconnect', () => {
+  io.on('disconnect', () => {
     const session = socket.handshake.session;
     console.log('user ' + session.username + ' disconnected');
   });
