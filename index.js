@@ -167,9 +167,6 @@ app.get('/svg', (req, res) => {
   });
 });
 
-
-
-
 io.use(sharedSession(sessionMiddleware, {
   autoSave: true,
 }));
