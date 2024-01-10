@@ -15,6 +15,7 @@ app.use(cookieParser());
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'css')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
@@ -180,9 +181,9 @@ io.on('connection', (socket) => {
   // Naslouchání na událost 'chat message' pro přijetí zprávy od klienta
   socket.on('chat message', (msg) => {
     if (session.username) {
-      io.emit('chat message', session.username + " : " + msg);
+      io.emit('chat message', session.username + ": " + msg);
     }
-    console.log('chat message', session.username + " : " + msg)
+    console.log('chat message', session.username + ": " + msg)
   });
 
   io.on('disconnect', () => {

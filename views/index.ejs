@@ -5,143 +5,24 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Špačet</title>
   <script src="/socket.io/socket.io.js"></script>
-  <script src="client.js"></script>
   <link rel="icon" href="https://cdn.discordapp.com/attachments/978941138771795978/1174610277661159424/spachat1k1.png">
-  <style>
-    .button {
-      padding: 10px 10px 8px 10px;
-    }
+  <link rel="stylesheet" href="index.css">
 
-    body {
-      margin: 0;
-      padding-bottom: 3rem;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-
-    #form {
-      background-color: rgb(206, 206, 206);
-      padding: 0.25rem;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      height: 3rem;
-      box-sizing: border-box;
-      backdrop-filter: blur(10px);
-    }
-
-    #input {
-      border: none;
-      padding: 0 1rem;
-      flex-grow: 1;
-      border-radius: 2rem;
-      margin: 0.25rem;
-    }
-
-    #input:focus {
-      outline: none;
-    }
-
-    #form>.button {
-      background: #333;
-      border: none;
-      padding: 0 1rem;
-      margin: 0.25rem;
-      border-radius: 3px;
-      outline: none;
-      color: #fff;
-    }
-
-    #messages {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    #messages>li {
-      padding: 0.5rem 1rem;
-    }
-
-    #messages>li:nth-child(odd) {
-      background: #efefef;
-    }
-
-    label {
-      margin-top: 7px;
-    }
-
-    #logout {
-      border: none;
-      border-radius: 5px;
-    }
-
-    p {
-      margin: auto;
-    }
-
-    .popup {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 20px;
-      background: #fff;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-    }
-
-    .overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 999;
-    }
-
-    .popup-btn {
-      cursor: pointer;
-      background: #3498db;
-      color: #fff;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      color: white;
-    }
-
-    .logout-btn {
-      background: #e74c3c;
-    }
-
-    #logoutnorm {
-      background-color: red;
-      border: none;
-      padding: 0 1rem;
-      margin: 0.25rem;
-      border-radius: 3px;
-      outline: none;
-      color: #fff;
-    }
-  </style>
 </head>
 
 <body>
-  <ul id="messages"></ul>
+  <ul id="messages" class="glowtext"></ul>
 
   <!-- Updated Form Section -->
   <form id="form" action="">
-    <p id="username">
+    <p id="username" class="glow">
       <%=username %>
     </p>
     <input id="input" autocomplete="off" placeholder="Type your message..." maxlength="150" />
     <p id="charCount">0/150</p>
-    <button id="send" class="button" onclick="sendMessage()">Send</button>
-    <button id="logoutnorm" class="button popup-btn" onclick="togglePopup()" style="background: purple;">Log
-      Out</button>
+    <button id="send" class="button" onclick="sendMessage()">- Send -</button>
+    <button id="logoutnorm" class="button popup-btn" onclick="togglePopup()" style="background: #ce1e76;">- Log
+      Out -</button>
   </form>
 
   <!-- Pop-up Section -->
@@ -165,37 +46,47 @@
       });
     });
 
+    // Inicializace Socket.io na klientovi a navázání spojení se serverem
     const socket = io();
 
-    const messages = document.getElementById('messages');
-    const form = document.getElementById('form');
-    const input = document.getElementById('input');
+    // Získání referencí na DOM prvky
+    const messages = document.getElementById('messages'); // Element pro zobrazování zpráv
+    const form = document.getElementById('form'); // Formulář pro odesílání zpráv
+    const input = document.getElementById('input'); // Pole pro zadání textu zprávy
+
     const charCountElement = document.getElementById('charCount'); // Added this line
 
+    // Naslouchání na odeslání formuláře (odeslání zprávy)
     form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (input.value) {
-        socket.emit('chat message', input.value);
-        input.value = '';
+      e.preventDefault(); // Zabránění výchozímu chování formuláře (reload stránky)
+      if (input.value) { // Pokud pole pro text zprávy není prázdné
+        socket.emit('chat message', input.value); // Odeslat zprávu na server
+        input.value = ''; // Vyčistit pole pro text zprávy po odeslání
         charCountElement.textContent = '0/150'; // Reset character count
       }
     });
 
+    // Naslouchání na příchod zprávy ze serveru
     socket.on('chat message', (msg) => {
+      // Vytvoření nového prvek <li> pro zobrazení zprávy
       const item = document.createElement('li');
-      item.textContent = msg;
-      messages.appendChild(item);
-      window.scrollTo(0, document.body.scrollHeight);
+      item.textContent = msg; // Nastavení textu zprávy do prvku
+      messages.appendChild(item); // Přidání prvku s zprávou do seznamu zpráv
+      window.scrollTo(0, document.body.scrollHeight); // Automatický scroll dolů na konec chatu
     });
 
+    // Naslouchání na událost "connect" při úspěšném navázání spojení se serverem
     socket.on("connect", () => {
-      console.log(socket.id);
+      console.log(socket.id); // Vypsání ID klienta do konzole při úspěšném připojení
     });
 
     // ...
 
     socket.on('user joined', (username) => {
-      alert(username + ' has joined the chat!');
+      const item = document.createElement('li');
+      item.textContent = "Console: " + username + " has joined the chat";
+      messages.appendChild(item);
+      window.scrollTo(0, document.body.scrollHeight);
     });
 
     // ...
