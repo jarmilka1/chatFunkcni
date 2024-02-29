@@ -1,5 +1,5 @@
 const express = require('express');
-const { createServer } = require('http'); // Changed from 'node:http'
+const { createServer } = require('http'); 
 const { join } = require('path');
 const { Server } = require('socket.io');
 const mysql = require('mysql2');
@@ -8,17 +8,16 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const sharedSession = require('express-socket.io-session');
-const fs = require('fs');
 
 // Inicializace Express aplikace
 const app = express();
 app.use(cookieParser());
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'css')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
-
 
 // Vytvoření HTTP serveru pomocí Express aplikace
 const server = createServer(app);
@@ -26,8 +25,8 @@ const server = createServer(app);
 // Inicializace Socket.io na serveru
 const io = new Server(server);
 
-// Vytvoření nového úložiště relací v paměti pomocí MemoryStore
 const sessionStore = new session.MemoryStore();
+
 const sessionMiddleware = session({
   store: sessionStore,
   secret: 'your_secret_key', // Replace with an actual secret key
@@ -48,27 +47,6 @@ const connection = mysql.createConnection({
   database: 'chat',
   port: 3001
 });
- 
-app.get('/setSession', (req, res) => {
-  const usernameFromCookie = req.cookies.username;
-
-  if (usernameFromCookie) {
-    req.session.username = usernameFromCookie;
-    res.send('User from cookie: ' + usernameFromCookie);
-  } else {
-    res.send('No username found in the cookie');
-  }
-});
-
-app.get('/settedSession', (req, res) => {
-  const username = req.session.username;
-
-  if (username) {
-    res.send('User from session: ' + username);
-  } else {
-    res.send('No username found in the session');
-  }
-});
 
 app.get('/chat', (req, res) => {
   let username = req.session.username;
@@ -85,6 +63,7 @@ app.get('/chat', (req, res) => {
   }
 });
 
+
 // Stránka pro registraci
 app.get('/register', (req, res) => {
   res.render('register');
@@ -97,7 +76,6 @@ app.post('/register', (req, res) => {
   // Příklad: Vytvoření nového uživatele v databázi
   connection.query('INSERT INTO user (username, password) VALUES (?, ?)', [username, password], (error, results, fields) => {
     if (error) {
-      console.error(error);
       res.sendFile(join(__dirname, 'failedRegister.html'));
     } else {
       console.log('Uživatel byl úspěšně registrován.');
@@ -106,15 +84,15 @@ app.post('/register', (req, res) => {
   });
 });
 
+
 // Stránka pro přihlášení
 app.get('/login', (req, res) => {
   res.render('login.ejs');
 });
-
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
-  connection.query('SELECT * FROM user WHERE (LOWER(username) = ? OR UPPER(username) = ?) AND (LOWER(password) = ? OR UPPER(password) = ?)', [username, username, password, password], (error, results, fields) => {
+  connection.query('SELECT * FROM user WHERE (BINARY username = ? OR BINARY username = ?) AND BINARY password = ?', [username, username, password], (error, results, fields) => {
     if (error) {
       console.error(error);
       res.status(500).send('Chyba při přihlášení.');
@@ -135,6 +113,7 @@ app.post('/login', (req, res) => {
   });
 });
 
+
 app.get('/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -144,27 +123,7 @@ app.get('/logout', (req, res) => {
   });
 });
 
-//svg
-app.get('/svg', (req, res) => {
-  const queryPromise = new Promise((resolve, reject) => {
-    connection.query('SELECT svg_data, style FROM svg_data', (error, results) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(results);
-      }
-    });
-  });
 
-  queryPromise.then((results) => {
-    const svgDataArray = results.map(result => result.svg_data);
-    const svgSTYLEArray = results.map(result => result.style);
-
-    res.render('svg.ejs', { svgDataArray, svgSTYLEArray });
-  }).catch((error) => {
-    throw error;
-  });
-});
 
 io.use(sharedSession(sessionMiddleware, {
   autoSave: true,
@@ -174,86 +133,33 @@ io.use(sharedSession(sessionMiddleware, {
 io.on('connection', (socket) => {
   const session = socket.handshake.session;
   console.log('user ' + session.username + ' connected');
-  io.emit('user joined', session.username);
+  io.to(socket.handshake.session.roomId).emit('user joined', { username: session.username, roomId: socket.handshake.session.roomId });
 
-  // Naslouchání na událost 'chat message' pro přijetí zprávy od klienta
+  socket.on('joinRoom', (roomId) => {
+    socket.join(roomId);
+    // Store the roomId in the socket's session
+    socket.handshake.session.roomId = roomId;
+    console.log(`User ${session.username} joined room ${roomId}`);
+
+    // Emit a message when a user joins a room
+    io.to(roomId).emit('room joined', { username: session.username, roomId: roomId, message: session.username + ' joined the room' });
+  });
+
   socket.on('chat message', (msg) => {
-    if (session.username) {
-      io.emit('chat message', session.username + ": " + msg);
+    // Retrieve the roomId from the socket's session
+    const roomId = socket.handshake.session.roomId;
+    if (session.username && roomId) {
+      io.to(roomId).emit('chat message', session.username + ": " + msg);
     }
-    console.log('chat message', session.username + ": " + msg)
+    console.log('chat message', roomId + session.username + ": " + msg);
   });
 
-  io.on('disconnect', () => {
-    const session = socket.handshake.session;
-    console.log('user ' + session.username + ' has disconnected');
-  });
-});
-
-app.get('/soubor', (req, res) => {
-  // Zde můžete provést čtení souborů, pokud potřebujete zobrazit seznam existujících souborů.
-  res.sendFile(join(__dirname, 'soubor.html'));
-});
-
-// Vytvoření dokumentu
-app.post('/create-document', (req, res) => {
-  const nazev = req.body.nazev;
-  const obsah = req.body.obsah;
-
-  fs.writeFile(`${nazev}.txt`, obsah, (err) => {
-    if (err) {
-      console.error('Chyba při vytváření souboru:', err);
-      res.status(500).send('Interní chyba serveru');
-    } else {
-      console.log('Soubor byl úspěšně vytvořen.');
-      res.redirect('/soubor');
-    }
-  });
-});
-
-// Čtení obsahu dokumentu
-app.get('/read-document/:nazev', (req, res) => {
-  const nazev = req.params.nazev;
-  fs.readFile(`${nazev}.txt`, 'utf8', (err, data) => {
-    if (err) {
-      console.error('Chyba při čtení souboru:', err);
-      res.status(404).send('Soubor nebyl nalezen');
-    } else {
-      res.send(data);
-    }
-  });
-});
-
-// Úprava dokumentu
-app.put('/update-document/:nazev', (req, res) => {
-  const nazev = req.params.nazev;
-  const obsah = req.body.obsah;
-
-  fs.writeFile(`${nazev}.txt`, obsah, (err) => {
-    if (err) {
-      console.error('Chyba při aktualizaci souboru:', err);
-      res.status(500).send('Interní chyba serveru'); // Poslat 500 v případě chyby
-    } else {
-      console.log('Soubor byl úspěšně aktualizován.');
-      res.send('Soubor byl aktualizován'); // Odeslat potvrzení o úspěšné aktualizaci
-    }
+  socket.on('disconnect', () => {
+    console.log('user ' + session.username + ' disconnected');
   });
 });
 
 
-// Smazání dokumentu
-app.delete('/delete-document/:nazev', (req, res) => {
-  const nazev = req.params.nazev;
-  fs.unlink(`${nazev}.txt`, (err) => {
-    if (err) {
-      console.error('Chyba při mazání souboru:', err);
-      res.status(500).send('Interní chyba serveru');
-    } else {
-      console.log('Soubor byl úspěšně smazán.');
-      res.send('Soubor byl smazán');
-    }
-  });
-});
 
 // Spuštění HTTP serveru na portu 80
 server.listen(80, () => {

@@ -6,6 +6,7 @@
   <title>Špačet</title>
   <script src="/socket.io/socket.io.js"></script>
   <link rel="icon" href="https://cdn.discordapp.com/attachments/978941138771795978/1174610277661159424/spachat1k1.png">
+  <script src="https://cdn.socket.io/4.1.3/socket.io.min.js"></script>
   <link rel="stylesheet" href="index.css">
 
 </head>
@@ -34,7 +35,10 @@
     <button class="popup-btn" onclick="closePopup()">Cancel</button>
   </div>
 
+
   <script>
+    const socket = io();
+
     document.addEventListener('DOMContentLoaded', function () {
       const inputElement = document.getElementById('input');
       const charCountElement = document.getElementById('charCount');
@@ -44,10 +48,15 @@
         const maxLength = parseInt(inputElement.getAttribute('maxlength'));
         charCountElement.textContent = currentLength + '/' + maxLength;
       });
+
+      // Get the roomId dynamically from the user input
+      const roomId = prompt('Enter room ID:');
+      // Join the specified room
+      socket.emit('joinRoom', roomId);
+      
     });
 
-    // Inicializace Socket.io na klientovi a navázání spojení se serverem
-    const socket = io();
+    
 
     // Získání referencí na DOM prvky
     const messages = document.getElementById('messages'); // Element pro zobrazování zpráv
@@ -80,17 +89,12 @@
       console.log(socket.id); // Vypsání ID klienta do konzole při úspěšném připojení
     });
 
-    // ...
-
-    socket.on('user joined', (username) => {
-      const item = document.createElement('li');
-      item.textContent = "Console: " + username + " has joined the chat";
-      messages.appendChild(item);
-      window.scrollTo(0, document.body.scrollHeight);
-    });
-
-    // ...
-
+    socket.on('room joined', (data) => {
+    const item = document.createElement('li');
+    item.textContent = "Console: " + data.username + " has joined the room " + data.roomId;
+    messages.appendChild(item);
+    window.scrollTo(0, document.body.scrollHeight);
+  });
 
     // Pop-up functions
     function togglePopup() {
