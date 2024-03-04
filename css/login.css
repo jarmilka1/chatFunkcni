@@ -1,6 +1,7 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: rgb(34, 193, 195);
+    background-color: linear-gradient(0deg, rgba(34, 193, 195, 1) 0%, rgba(0, 162, 10, 1) 100%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -65,9 +66,11 @@ button {
 button:hover {
     background-color: #555;
 }
-a{
+
+a {
     margin-left: 98px;
 }
+
 form i {
     margin-left: -30px;
     cursor: pointer;

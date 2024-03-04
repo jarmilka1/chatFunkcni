@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,8 +15,12 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-           /* background-image: url(https://rb.gy/gwisq);*/
-           background-color: darkslategrey
+            /* background-image: url(https://rb.gy/gwisq);*/
+            background: rgb(46, 79, 79);
+            background: -moz-linear-gradient(0deg, rgba(46, 79, 79, 1) 0%, rgba(77, 144, 144, 1) 50%, rgba(46, 79, 79, 1) 100%);
+            background: -webkit-linear-gradient(0deg, rgba(46, 79, 79, 1) 0%, rgba(77, 144, 144, 1) 50%, rgba(46, 79, 79, 1) 100%);
+            background: linear-gradient(0deg, rgba(46, 79, 79, 1) 0%, rgba(77, 144, 144, 1) 50%, rgba(46, 79, 79, 1) 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#2e4f4f", endColorstr="#2e4f4f", GradientType=1);
         }
 
         h1 {
@@ -33,7 +38,7 @@
             -moz-border-radius: 30px 30px 30px 30px;
             -webkit-border-radius: 30px 30px 30px 30px;
             border: 0px solid #000000;
-            
+
         }
 
         label {
@@ -41,7 +46,7 @@
             margin-bottom: 8px;
             font-weight: bold;
             text-align: center;
-            
+
         }
 
         input[type="text"],
@@ -75,19 +80,20 @@
         button:hover {
             background-color: #555;
         }
-        
+
         /* Center the <b> tag */
-        a{
+        a {
             margin-left: 98px;
             font-weight: bold;
         }
-        form i {
-    margin-left: -30px;
-    cursor: pointer;
-}
 
+        form i {
+            margin-left: -30px;
+            cursor: pointer;
+        }
     </style>
 </head>
+
 <body>
     <div class="position">
         <h1>Registrace</h1>
@@ -95,8 +101,8 @@
             <label for="username">Jméno</label>
             <input type="text" name="username" id="username" required>
             <label for="password">Heslo</label>
-                <input type="password" name="password" id="password" required/>
-                <i class="bi bi-eye-slash" id="togglePassword"></i>
+            <input type="password" name="password" id="password" required />
+            <i class="bi bi-eye-slash" id="togglePassword"></i>
             <button type="submit">Registrovat</button>
             <br>
             <b><a href="/login">Již mám účet</a></b>
@@ -113,7 +119,7 @@
             // toggle the type attribute
             const type = password.getAttribute("type") === "password" ? "text" : "password";
             password.setAttribute("type", type);
-            
+
             // toggle the icon
             this.classList.toggle("bi-eye");
         });
@@ -125,4 +131,5 @@
         // });
     </script>
 </body>
+
 </html>
